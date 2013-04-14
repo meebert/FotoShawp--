@@ -8,6 +8,8 @@ import java.io.*;
 public class Viewer extends JFrame {
 	private BufferedImage image;
 	private JFileChooser imageChooser = new JFileChooser();
+	private static Viewer view = new Viewer();
+
 	
 	private JFrame frame = new JFrame("FotoShawp--");
 	private JPanel centerPanel = new JPanel();
@@ -15,7 +17,6 @@ public class Viewer extends JFrame {
 	
 	
 	private JLabel imageLabel = new JLabel();
-	private JScrollPane imageHolder = new JScrollPane();
 
 	//FILE MENU
 	private JMenu file = new JMenu("File");
@@ -28,15 +29,15 @@ public class Viewer extends JFrame {
 
 
 	public static void main(String args[]){
-		Viewer view = new Viewer();
 		view.start();
 	}
 	
 	public Viewer(){
 		frame.setJMenuBar(menuBar);
 		//FILE MENU
-		file.add(quitMenu);
 		file.add(loadMenu);
+		file.add(quitMenu);
+
 		menuBar.add(file);
 		
 		//FILTERS MENU
@@ -44,11 +45,10 @@ public class Viewer extends JFrame {
 		menuBar.add(filters);
 		
 		//PANELS
-		imageHolder.setSize(300,250);
-		centerPanel.add(imageHolder);
+		centerPanel.add(imageLabel);
 		
 		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add(centerPanel , BorderLayout.NORTH);
+		frame.getContentPane().add(centerPanel , BorderLayout.CENTER);
 		
 		
 		frame.addWindowListener(new WindowQuit());
@@ -59,7 +59,8 @@ public class Viewer extends JFrame {
 	
 	protected void paintComponent(Graphics g){
 		super.paintComponents(g);
-		g.drawImage(image, 0,0,null);
+		g.drawImage(image.getScaledInstance(400, -1, image.SCALE_SMOOTH), 500, 400,this);
+		repaint();
 	}
 	
 	public class Load implements ActionListener{
@@ -68,10 +69,12 @@ public class Viewer extends JFrame {
 			File file = imageChooser.getSelectedFile();
 			try{
 				image = ImageIO.read(file);
-				imageHolder = new JScrollPane(new JLabel(new ImageIcon(image)));
-				centerPanel.add(imageHolder);
-			} catch (IOException e) {
+				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
 				
+			} catch (IOException e) {
+				System.out.println(e);
 			}
 			
 			

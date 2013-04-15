@@ -1,5 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -11,6 +14,10 @@ public class Viewer extends JFrame {
 	private static Viewer view = new Viewer();
 
 	
+	//TRANSFORMATION OBJECTS
+	Brightness bright;
+	Sharpen sharp;
+	
 	//DISPLAY VARS
 	private JFrame frame = new JFrame("FotoShawp--");
 	private JMenuBar menuBar = new JMenuBar();
@@ -21,13 +28,13 @@ public class Viewer extends JFrame {
 
 	//SOUTH PANEL
 	private JPanel southPanel = new JPanel();
-	private JSlider sharpness = new JSlider();
+	private JSlider sharpness = new JSlider(0,200);
 	private JLabel sharpLabel = new JLabel("Sharpness->");
 	
 	private JSlider contrast = new JSlider();
 	private JLabel contrastLabel = new JLabel("Contrast->");
 	
-	private JSlider brightness = new JSlider();
+	private JSlider brightness = new JSlider(0,200);
 	private JLabel brightLabel = new JLabel("Brightness->");
 	
 	private JButton oDither = new JButton("Ordered Dither");
@@ -88,6 +95,23 @@ public class Viewer extends JFrame {
 			
 		quitMenu.addActionListener(new MenuQuit());
 		loadMenu.addActionListener(new Load());
+		
+		brightness.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent c) {
+				image = bright.brighten( brightness.getValue()/100.f);
+				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+			}
+		});
+		sharpness.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent c) {
+				image = sharp.sharpen(sharpness.getValue()/100.f);
+				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+			}
+		});
 	}
 	
 	protected void paintComponent(Graphics g){
@@ -105,6 +129,11 @@ public class Viewer extends JFrame {
 				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
+				
+				//Initialize Transformation Objects
+				sharp = new Sharpen(image);
+				bright = new Brightness(image);
+
 				
 			} catch (IOException e) {
 				System.out.println(e);

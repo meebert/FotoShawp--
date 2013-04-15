@@ -1,80 +1,36 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
 import java.awt.image.*;
-import java.io.*;
+import com.jhlabs.image.*;
 
-
-public class Sharpen extends JFrame {
-
+public class Sharpen{
 	private BufferedImage image;
-	private JFileChooser imageChooser = new JFileChooser();
+	private float sharpness;
 	
+	public Sharpen(BufferedImage i){
+		image = i;
+	}
 	
-	private JFrame frame = new JFrame("Sharpen");
-	private JPanel centerPanel = new JPanel();
-	
-	
-	
-	private JMenuBar menuBar = new JMenuBar();
-	
-	//FILE MENU
-	private JMenu file = new JMenu("File");
-	private JMenuItem quitMenu = new JMenuItem("Quit");
-	private JMenuItem loadMenu = new JMenuItem("Load");
+	public BufferedImage sharpen(float sharpAmount ){
+		sharpness = sharpAmount;
 
-	
-	//FILTERS MENU
-	private JMenu filters = new JMenu("Filters");
-	private JMenuItem sharpen = new JMenuItem("Sharpen");
+		BufferedImage dst = new BufferedImage(image.getWidth() , image.getHeight(), image.getType());
+		int width = image.getWidth();
+		int height = image.getHeight();
+		float s = sharpness;
+		int[] pixels = new int[width * height];
+		int[] result = new int[width * height];
+		float[] matrix =new float[] { 0, -s ,0 ,  -s,(1+4*s),-s ,  0 ,-s,0  }; 
 
-
-	public static void main(String args[]){
-		Viewer view = new Viewer();
-		view.start();
-	}
-	
-	public Sharpen(){
-		frame.setJMenuBar(menuBar);
+		image.getRGB(0, 0, width, height, pixels, 0, width);
 		
-		//file.add(quitMenu);
-		file.add(loadMenu);
-		menuBar.add(file);
+		ConvolveFilter conv = new ConvolveFilter(matrix);
 		
-		filters.add(sharpen);
-		menuBar.add(filters);
+		ConvolveFilter.convolve(conv.getKernel() , pixels , result, width,height, 255);
+		
+		dst.setRGB(0, 0, width, height, result, 0, width);
 		
 		
-		frame.getContentPane().setLayout(new BorderLayout());
-		frame.addWindowListener(new WindowQuit());
-			
-		quitMenu.addActionListener(new MenuQuit());
-		loadMenu.addActionListener(new Load());
-	}
-	
-	public class Load implements ActionListener{
-		public void actionPerformed(ActionEvent event){
-			File file = imageChooser.getSelectedFile();
+		return dst;
 		
-		}
 	}
-	
-	public class MenuQuit implements ActionListener{
-		public void actionPerformed(ActionEvent event){
-			System.exit(0);
-		}
-	}
-	
-	public class WindowQuit extends WindowAdapter{
-		public void windowClosing(WindowEvent event){
-			System.exit(0);
-		}
-	}
-	
-	public void start(){
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-	}
-	
 }

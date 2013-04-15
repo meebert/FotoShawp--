@@ -11,17 +11,34 @@ public class Viewer extends JFrame {
 	private static Viewer view = new Viewer();
 
 	
+	//DISPLAY VARS
 	private JFrame frame = new JFrame("FotoShawp--");
-	private JPanel centerPanel = new JPanel();
 	private JMenuBar menuBar = new JMenuBar();
 	
-	
+	//CENTER PANEL
+	private JPanel centerPanel = new JPanel();
 	private JLabel imageLabel = new JLabel();
+
+	//SOUTH PANEL
+	private JPanel southPanel = new JPanel();
+	private JSlider sharpness = new JSlider();
+	private JLabel sharpLabel = new JLabel("Sharpness->");
+	
+	private JSlider contrast = new JSlider();
+	private JLabel contrastLabel = new JLabel("Contrast->");
+	
+	private JSlider brightness = new JSlider();
+	private JLabel brightLabel = new JLabel("Brightness->");
+	
+	private JButton oDither = new JButton("Ordered Dither");
+	private JButton rDither = new JButton("Random Dither");
+
 
 	//FILE MENU
 	private JMenu file = new JMenu("File");
 	private JMenuItem quitMenu = new JMenuItem("Quit");
 	private JMenuItem loadMenu = new JMenuItem("Load");
+	private JMenuItem saveMenu = new JMenuItem("Save");
 
 	//FILTERS MENU
 	private JMenu filters = new JMenu("Filters");
@@ -36,20 +53,36 @@ public class Viewer extends JFrame {
 		frame.setJMenuBar(menuBar);
 		//FILE MENU
 		file.add(loadMenu);
+		file.add(saveMenu);
 		file.add(quitMenu);
-
 		menuBar.add(file);
 		
 		//FILTERS MENU
 		filters.add(sharpen);
 		menuBar.add(filters);
 		
-		//PANELS
+		//CENTER PANEL (IMAGE)
 		centerPanel.add(imageLabel);
+		
+		//SOUTH PANEL (IMAGE TRANSFORMATION)
+		southPanel.add(sharpLabel);
+		southPanel.add(sharpness);
+		
+		southPanel.add(contrastLabel);
+		southPanel.add(contrast);
+		
+		southPanel.add(brightLabel);
+		southPanel.add(brightness);
+		
+		southPanel.add(rDither);
+		southPanel.add(oDither);
+
+		
 		
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(centerPanel , BorderLayout.CENTER);
-		
+		frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+
 		
 		frame.addWindowListener(new WindowQuit());
 			

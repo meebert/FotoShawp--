@@ -11,15 +11,15 @@ public class Contrast {
 	public Contrast(BufferedImage i){	
 		image = i; 
 	}
-	public BufferedImage contr(float con){
+	public BufferedImage contr(float con , BufferedImage i){
 		contrast = con;
-		BufferedImage dst = new BufferedImage(image.getWidth() , image.getHeight(), image.getType());
+		BufferedImage dst = new BufferedImage(i.getWidth() , i.getHeight(), i.getType());
 
-		int width = image.getWidth();
-		int height = image.getHeight();
+		int width = i.getWidth();
+		int height = i.getHeight();
 
 		int[] pixels = new int[width * height];
-		image.getRGB(0, 0, width, height, pixels, 0, width);
+		i.getRGB(0, 0, width, height, pixels, 0, width);
 		
 		
 		int a, r, g, b;

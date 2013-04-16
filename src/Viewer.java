@@ -62,30 +62,28 @@ public class Viewer extends JFrame {
 	private JMenuItem sharpenMenu = new JMenuItem("Sharpen");
 	private JMenuItem brightMenu = new JMenuItem("Brightness");
 	private JMenuItem conMenu = new JMenuItem("Contrast");
+	private JMenuItem bw = new JMenuItem("Black and White");
+	private JMenuItem sepia = new JMenuItem("sepia");
+	private JMenuItem xray = new JMenuItem("X-Ray");
+	private JMenuItem popart = new JMenuItem("Pop-Art");
+	private JMenuItem bulge = new JMenuItem("Bulge");
+	private JMenuItem warp = new JMenuItem("Warp");
 	
-
 	//MOSAIC MENU
 	private JMenu mosaic = new JMenu("Photo Mosaic");
 	private JMenuItem movies = new JMenuItem("Movies");
 	private JMenuItem paints = new JMenuItem("Paintings");
 	
-	
-	
-
-	
-
+	//START VIEWER
 	public static void main(String args[]){
 		view.start();
 	}
-	
+	//APPLY CHANGES
 	public void apply(){
-		bright.setImage(image);
-		sharp.setImage(image);
-		con.setImage(image);
-		
-		
-		
-		Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+		//bright.setImage(image);
+		//sharp.setImage(image);
+		//con.setImage(image);
+		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));
 		centerPanel.repaint();
 		
@@ -94,9 +92,9 @@ public class Viewer extends JFrame {
 		southPanel.removeAll();
 		repaint();
 	}
-	
-	
+	//INITIALIZE GUI
 	public Viewer(){
+		//APPLY MENUBAR
 		frame.setJMenuBar(menuBar);
 		//FILE MENU
 		file.add(loadMenu);
@@ -108,6 +106,12 @@ public class Viewer extends JFrame {
 		filters.add(sharpenMenu);
 		filters.add(brightMenu);
 		filters.add(conMenu);
+		filters.add(bw);
+		filters.add(sepia);
+		filters.add(xray);
+		filters.add(popart);
+		filters.add(bulge);
+		filters.add(warp);
 		menuBar.add(filters);
 		
 		//DITHER MENU
@@ -137,19 +141,22 @@ public class Viewer extends JFrame {
 		southPanel.add(oDither);
 */
 		
-		
+		//STRUCTURE GUI
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(centerPanel , BorderLayout.CENTER);
 		frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
 
 		
-		frame.addWindowListener(new WindowQuit());
-			
+		//ACTIONLISTENER FOR LOAD / QUIT
+		frame.addWindowListener(new WindowQuit());	
 		quitMenu.addActionListener(new MenuQuit());
 		loadMenu.addActionListener(new Load());
 		
+		//MENU LISTENERS
 		sharpenMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
 				southPanel.setVisible(true);
 
 				southPanel.add(sharpLabel);
@@ -169,6 +176,8 @@ public class Viewer extends JFrame {
 		
 		brightMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
 				southPanel.setVisible(true);
 
 				southPanel.add(brightLabel);
@@ -187,6 +196,8 @@ public class Viewer extends JFrame {
 		});
 		conMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
 				southPanel.setVisible(true);
 
 				southPanel.add(contrastLabel);
@@ -203,35 +214,46 @@ public class Viewer extends JFrame {
 				
 			}
 		});
-		
+		//SLIDER / BUTTON LISTENERS
 		brightness.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
 				southPanel.setVisible(true);
 
+				
+				update();
+
+				/*
 				image = bright.brighten( brightness.getValue()/100.f);
 				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
+				*/
 			}
 		});
 		sharpness.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
 				southPanel.setVisible(true);
 
+				update();
+
+				/*
 				image = sharp.sharpen(sharpness.getValue()/100.f);
 				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
+				*/
 			}
 		});
 		contrast.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
 				southPanel.setVisible(true);
-
+				update();
+				/*
 				image = con.contr(contrast.getValue()/100.f);
 				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
+				*/
 			}
 		});
 		
@@ -248,6 +270,20 @@ public class Viewer extends JFrame {
 		repaint();
 	}
 	*/
+	public void update(){
+		currentImage = bright.brighten( brightness.getValue()/100.f , image);
+		currentImage = sharp.sharpen(sharpness.getValue()/100.f, currentImage);
+		currentImage = con.contr(contrast.getValue()/100.f, currentImage);
+
+		
+		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+		imageLabel.setIcon(new ImageIcon(sImage));
+		centerPanel.repaint();
+
+
+	}
+	
+	
 	public class Load implements ActionListener{
 		public void actionPerformed(ActionEvent event){
 			imageChooser.showOpenDialog(null);

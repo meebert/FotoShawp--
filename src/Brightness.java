@@ -11,25 +11,24 @@ public class Brightness {
 		image = i;
 	}
 	
-	public BufferedImage brighten(float bright){
+	public BufferedImage brighten(float bright , BufferedImage i){
 		brightness = bright;
 
 		
-		BufferedImage dst = new BufferedImage(image.getWidth() , image.getHeight(), image.getType());
+		BufferedImage dst = new BufferedImage(i.getWidth() , i.getHeight(), i.getType());
 
-		int width = image.getWidth();
-		int height = image.getHeight();
+		int width = i.getWidth();
+		int height = i.getHeight();
 
 		// a buffer that stores the destination image pixels
 		int[] pixels = new int[width * height];
 	
 		// get the pixels of the source image	
-		image.getRGB(0, 0, width, height, pixels, 0, width);
+		i.getRGB(0, 0, width, height, pixels, 0, width);
 
-		int i;
 		int a, r, g, b;
-		for(i = 0; i < width * height; i ++) {
-			Color rgb = new Color(pixels[i]);
+		for(int k = 0; k < width * height; k ++) {
+			Color rgb = new Color(pixels[k]);
 			// a color is represented as an integer (4 bytes); 
 			// each of the alpha, red, green, blue channels is stored in one byte in order;
 			// you can use the Color class to extract the value of each individual channel
@@ -42,7 +41,7 @@ public class Brightness {
 			g = PixelUtils.clamp((int)((float)g * brightness));
 			b = PixelUtils.clamp((int)((float)b * brightness));
 
-			pixels[i] = new Color(r, g, b, a).getRGB();
+			pixels[k] = new Color(r, g, b, a).getRGB();
 		}
 
 		// write pixel values to the destination image

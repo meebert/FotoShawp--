@@ -5,6 +5,7 @@ import com.jhlabs.image.*;
 public class Sharpen{
 	private BufferedImage image;
 	private float sharpness;
+
 	
 	public Sharpen(BufferedImage i){
 		image = i;
@@ -29,8 +30,12 @@ public class Sharpen{
 		
 		dst.setRGB(0, 0, width, height, result, 0, width);
 		
-		
 		return dst;
 		
 	}
+	
+	public void setImage(BufferedImage i){
+		image = i;
+	}
+	
 }

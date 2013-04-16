@@ -51,6 +51,8 @@ public class Brightness {
 		return dst;
 		
 	}
-	
+	public void setImage(BufferedImage i){
+		image = i;
+	}
 	
 }

@@ -83,19 +83,15 @@ public class Viewer extends JFrame {
 	}
 	//APPLY CHANGES
 	public void apply(){
-		//bright.setImage(image);
-		//sharp.setImage(image);
-		//con.setImage(image);
 		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));
 		centerPanel.repaint();
-		
 		southPanel.setVisible(false);
-
 		southPanel.removeAll();
 		repaint();
+		
 	}
-	//INITIALIZE GUI
+	//INITIALIZE GUI AND ACTION LISTENERS
 	public Viewer(){
 		//APPLY MENUBAR
 		frame.setJMenuBar(menuBar);
@@ -140,6 +136,7 @@ public class Viewer extends JFrame {
 		frame.addWindowListener(new WindowQuit());	
 		quitMenu.addActionListener(new MenuQuit());
 		loadMenu.addActionListener(new Load());
+		saveMenu.addActionListener(new Save());
 		
 		//MENU LISTENERS
 		sharpenMenu.addActionListener(new ActionListener(){
@@ -364,6 +361,32 @@ public class Viewer extends JFrame {
 			
 			
 		}
+	}
+	public class Save implements ActionListener{
+		public void actionPerformed(ActionEvent event){
+			String fileName = new String("");
+			String dir = new String("");
+		    JFileChooser c = new JFileChooser();
+		      // Demonstrate "Save" dialog:
+		      int rVal = c.showSaveDialog(Viewer.this);
+		      if (rVal == JFileChooser.APPROVE_OPTION) {
+		        fileName = (c.getSelectedFile().getName());
+		        dir = (c.getCurrentDirectory().toString());
+		      }
+		      if (rVal == JFileChooser.CANCEL_OPTION) {
+		       
+		      }
+		      System.out.println(dir);
+		      try {
+		    	    BufferedImage bi = currentImage;
+		    	    File outputfile = new File(fileName + ".png");
+		    	    ImageIO.write(bi, "png", outputfile);
+		    	} catch (IOException e) {
+		    	   
+		    	}
+		      
+		      
+		} 
 	}
 	public class MenuQuit implements ActionListener{
 		public void actionPerformed(ActionEvent event){

@@ -19,6 +19,9 @@ public class Viewer extends JFrame {
 	Brightness bright;
 	Sharpen sharp;
 	Contrast con;
+	Dither dit = new Dither();
+	Mosaic mos = new Mosaic();
+	
 	
 	//DISPLAY VARS
 	private JFrame frame = new JFrame("FotoShawp--");
@@ -71,7 +74,7 @@ public class Viewer extends JFrame {
 	
 	//MOSAIC MENU
 	private JMenu mosaic = new JMenu("Photo Mosaic");
-	private JMenuItem movies = new JMenuItem("Movies");
+	private JMenuItem music = new JMenuItem("Music");
 	private JMenuItem paints = new JMenuItem("Paintings");
 	
 	//START VIEWER
@@ -120,27 +123,13 @@ public class Viewer extends JFrame {
 		menuBar.add(dither);
 		
 		//MOSAIC MENU
-		mosaic.add(movies);
+		mosaic.add(music);
 		mosaic.add(paints);
 		menuBar.add(mosaic);
 		
 		//CENTER PANEL (IMAGE)
 		centerPanel.add(imageLabel);
-		//SOUTH PANEL (IMAGE TRANSFORMATION)
-		/*
-		southPanel.add(sharpLabel);
-		southPanel.add(sharpness);
-		
-		southPanel.add(contrastLabel);
-		southPanel.add(contrast);
-		
-		southPanel.add(brightLabel);
-		southPanel.add(brightness);
-		
-		southPanel.add(rDither);
-		southPanel.add(oDither);
-*/
-		
+
 		//STRUCTURE GUI
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(centerPanel , BorderLayout.CENTER);
@@ -214,6 +203,70 @@ public class Viewer extends JFrame {
 				
 			}
 		});
+	
+		
+		rDither.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				currentImage = dit.ditherR(currentImage);
+				Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();			
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		oDither.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				currentImage = dit.ditherO(currentImage);
+				Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();			
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		music.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				currentImage = mos.mosaicIt(currentImage , "music");
+				Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();			
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		
+		
 		//SLIDER / BUTTON LISTENERS
 		brightness.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
@@ -271,6 +324,7 @@ public class Viewer extends JFrame {
 	}
 	*/
 	public void update(){
+		//currentImage = 
 		currentImage = bright.brighten( brightness.getValue()/100.f , image);
 		currentImage = sharp.sharpen(sharpness.getValue()/100.f, currentImage);
 		currentImage = con.contr(contrast.getValue()/100.f, currentImage);
@@ -286,6 +340,10 @@ public class Viewer extends JFrame {
 	
 	public class Load implements ActionListener{
 		public void actionPerformed(ActionEvent event){
+			southPanel.setVisible(false);
+			southPanel.removeAll();
+			southPanel.setVisible(true);
+			
 			imageChooser.showOpenDialog(null);
 			File file = imageChooser.getSelectedFile();
 			try{
@@ -293,7 +351,7 @@ public class Viewer extends JFrame {
 				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
-				
+				currentImage = image;
 				//Initialize Transformation Objects With Loaded Image
 				sharp = new Sharpen(image);
 				bright = new Brightness(image);

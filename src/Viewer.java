@@ -13,8 +13,8 @@ public class Viewer extends JFrame {
 	private BufferedImage currentImage;
 	private JFileChooser imageChooser = new JFileChooser();
 	private static Viewer view = new Viewer();
+	private final int SCALE = 900;
 
-	
 	//TRANSFORMATION OBJECTS
 	Brightness bright;
 	Sharpen sharp;
@@ -39,8 +39,8 @@ public class Viewer extends JFrame {
 	private JSlider brightness = new JSlider(0,200);
 	private JLabel brightLabel = new JLabel("Brightness->");
 	
-	private JButton oDither = new JButton("Ordered Dither");
-	private JButton rDither = new JButton("Random Dither");
+	//private JButton oDither = new JButton("Ordered Dither");
+	//private JButton rDither = new JButton("Random Dither");
 
 	private JButton apply = new JButton("Apply Change");
 
@@ -51,13 +51,28 @@ public class Viewer extends JFrame {
 	private JMenuItem saveMenu = new JMenuItem("Save");
 
 
+	//DITHER MENU
+	private JMenu dither = new JMenu("Dither");
+	private JMenuItem oDither = new JMenuItem("Ordered");
+	private JMenuItem rDither = new JMenuItem("Random");
+
 
 	//FILTERS MENU
 	private JMenu filters = new JMenu("Filters");
 	private JMenuItem sharpenMenu = new JMenuItem("Sharpen");
 	private JMenuItem brightMenu = new JMenuItem("Brightness");
 	private JMenuItem conMenu = new JMenuItem("Contrast");
+	
 
+	//MOSAIC MENU
+	private JMenu mosaic = new JMenu("Photo Mosaic");
+	private JMenuItem movies = new JMenuItem("Movies");
+	private JMenuItem paints = new JMenuItem("Paintings");
+	
+	
+	
+
+	
 
 	public static void main(String args[]){
 		view.start();
@@ -70,7 +85,7 @@ public class Viewer extends JFrame {
 		
 		
 		
-		Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+		Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));
 		centerPanel.repaint();
 		
@@ -88,12 +103,22 @@ public class Viewer extends JFrame {
 		file.add(saveMenu);
 		file.add(quitMenu);
 		menuBar.add(file);
-		
+	
 		//FILTERS MENU
 		filters.add(sharpenMenu);
 		filters.add(brightMenu);
 		filters.add(conMenu);
 		menuBar.add(filters);
+		
+		//DITHER MENU
+		dither.add(oDither);
+		dither.add(rDither);
+		menuBar.add(dither);
+		
+		//MOSAIC MENU
+		mosaic.add(movies);
+		mosaic.add(paints);
+		menuBar.add(mosaic);
 		
 		//CENTER PANEL (IMAGE)
 		centerPanel.add(imageLabel);
@@ -184,7 +209,7 @@ public class Viewer extends JFrame {
 				southPanel.setVisible(true);
 
 				image = bright.brighten( brightness.getValue()/100.f);
-				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
 			}
@@ -194,7 +219,7 @@ public class Viewer extends JFrame {
 				southPanel.setVisible(true);
 
 				image = sharp.sharpen(sharpness.getValue()/100.f);
-				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
 			}
@@ -204,7 +229,7 @@ public class Viewer extends JFrame {
 				southPanel.setVisible(true);
 
 				image = con.contr(contrast.getValue()/100.f);
-				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
 			}
@@ -229,7 +254,7 @@ public class Viewer extends JFrame {
 			File file = imageChooser.getSelectedFile();
 			try{
 				image = ImageIO.read(file);
-				Image sImage = image.getScaledInstance(700, -1, image.SCALE_SMOOTH);
+				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
 				
@@ -262,7 +287,7 @@ public class Viewer extends JFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.pack();
-		frame.setSize(1000,800);
+		frame.setSize(1000,700);
 
 		frame.setVisible(true);
 	}

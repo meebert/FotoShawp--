@@ -12,11 +12,7 @@ public class Sharpen{
 	}
 	
 	public BufferedImage sharpen(float sharpAmount , BufferedImage i  ){
-		sharpness = sharpAmount;
-		
-		
-		System.out.println(sharpness);
-		
+		sharpness = sharpAmount;		
 		BufferedImage dst = new BufferedImage(i.getWidth() , i.getHeight(), i.getType());
 		int width = i.getWidth();
 		int height = i.getHeight();

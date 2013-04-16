@@ -1,8 +1,6 @@
 import java.awt.Color;
 import java.awt.image.*;
-
 import com.jhlabs.image.*;
-
 
 public class Contrast {
 	private BufferedImage image;

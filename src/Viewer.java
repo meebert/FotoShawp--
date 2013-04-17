@@ -52,6 +52,7 @@ public class Viewer extends JFrame {
 	private JLabel satLabel = new JLabel("Saturation->");
 	
 
+	private JButton faceQ = new JButton("Face Quantization");
 	private JButton apply = new JButton("Apply Change");
 
 	//FILE MENU
@@ -85,6 +86,13 @@ public class Viewer extends JFrame {
 	private JMenu mosaic = new JMenu("Photo Mosaic");
 	private JMenuItem music = new JMenuItem("Music");
 	private JMenuItem paints = new JMenuItem("Paintings");
+	
+	
+	//FACE MENU
+	private JMenu face = new JMenu("Face Detection");
+	private JMenuItem faceQuan = new JMenuItem("Quantization");
+
+	
 	
 	//START VIEWER
 	public static void main(String args[]){
@@ -134,6 +142,10 @@ public class Viewer extends JFrame {
 		mosaic.add(paints);
 		menuBar.add(mosaic);
 		
+		//FACE MENU
+		face.add(faceQuan);
+		menuBar.add(face);
+		
 		//CENTER PANEL (IMAGE)
 		centerPanel.add(imageLabel);
 
@@ -170,6 +182,26 @@ public class Viewer extends JFrame {
 				
 			}
 		});
+		
+		faceQuan.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(faceQ);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
 		
 		saturationMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
@@ -393,6 +425,16 @@ public class Viewer extends JFrame {
 				apply();
 			}	
 		});
+
+		faceQ.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				FaceDetect theFace = new FaceDetect();
+				currentImage = theFace.skinQuantize(currentImage);
+				apply();
+				
+			}	
+		});
+		
 	}
 	/*
 	protected void paintComponent(Graphics g){

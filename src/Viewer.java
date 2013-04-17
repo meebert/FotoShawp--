@@ -51,6 +51,15 @@ public class Viewer extends JFrame {
 	private JSlider satLevel = new JSlider(0,200,100);
 	private JLabel satLabel = new JLabel("Saturation->");
 	
+	private JLabel xrayLabel = new JLabel("X-Ray->");
+	
+	private JLabel bwLabel = new JLabel("Black and White->");
+	
+	private JLabel sepiaLabel = new JLabel("Sepia->");
+	
+	private JLabel popartLabel = new JLabel("Pop Art->");
+	
+	
 
 	private JButton faceQ = new JButton("Face Quantization");
 	private JButton apply = new JButton("Apply Change");
@@ -76,7 +85,7 @@ public class Viewer extends JFrame {
 	private JMenuItem brightMenu = new JMenuItem("Brightness");
 	private JMenuItem conMenu = new JMenuItem("Contrast");
 	private JMenuItem bw = new JMenuItem("Black and White");
-	private JMenuItem sepia = new JMenuItem("sepia");
+	private JMenuItem sepia = new JMenuItem("Sepia");
 	private JMenuItem xray = new JMenuItem("X-Ray");
 	private JMenuItem popart = new JMenuItem("Pop-Art");
 	private JMenuItem bulge = new JMenuItem("Bulge");
@@ -433,6 +442,86 @@ public class Viewer extends JFrame {
 				apply();
 				
 			}	
+		});
+		
+		bw.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(bwLabel);
+				southPanel.add(apply);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		sepia.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(sepiaLabel);
+				southPanel.add(apply);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		xray.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(xrayLabel);
+				southPanel.add(apply);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		popart.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(popartLabel);
+				southPanel.add(apply);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
 		});
 		
 	}

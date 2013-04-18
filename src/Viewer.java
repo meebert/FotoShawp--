@@ -59,8 +59,11 @@ public class Viewer extends JFrame {
 	
 	private JLabel popartLabel = new JLabel("Pop Art->");
 	
+	private JLabel warpLabel = new JLabel("Warp->");
 	
-
+	private JLabel bulgeLabel = new JLabel("Bulge->");
+	
+	
 	private JButton faceQ = new JButton("Face Quantization");
 	private JButton apply = new JButton("Apply Change");
 
@@ -511,6 +514,46 @@ public class Viewer extends JFrame {
 				southPanel.setVisible(true);
 
 				southPanel.add(popartLabel);
+				southPanel.add(apply);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		warp.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(warpLabel);
+				southPanel.add(apply);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		bulge.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(bulgeLabel);
 				southPanel.add(apply);
 				//southPanel.repaint();
 				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);

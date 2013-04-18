@@ -23,7 +23,8 @@ public class Viewer extends JFrame {
 	Mosaic mos = new Mosaic();
 	Blur blurObj = new Blur();
 	Saturation saturation = new Saturation();
-	
+	BW blackAndWhite = new BW();
+	boolean isBW = false;
 	
 	//DISPLAY VARS
 	private JFrame frame = new JFrame("FotoShawp--");
@@ -36,7 +37,7 @@ public class Viewer extends JFrame {
 	//SOUTH PANEL
 	private JPanel southPanel = new JPanel();
 	
-	private JSlider sharpness = new JSlider(100,200,100);
+	private JSlider sharpness = new JSlider(0,200,0);
 	private JLabel sharpLabel = new JLabel("Sharpness->");
 	
 	private JSlider contrast = new JSlider(0,200);
@@ -51,6 +52,7 @@ public class Viewer extends JFrame {
 	private JSlider satLevel = new JSlider(0,200,100);
 	private JLabel satLabel = new JLabel("Saturation->");
 	
+<<<<<<< HEAD
 	private JLabel xrayLabel = new JLabel("X-Ray->");
 	
 	private JLabel bwLabel = new JLabel("Black and White->");
@@ -64,6 +66,11 @@ public class Viewer extends JFrame {
 	private JLabel bulgeLabel = new JLabel("Bulge->");
 	
 	
+=======
+	private JButton blWh = new JButton("Black and White");
+	
+
+>>>>>>> COMMIT
 	private JButton faceQ = new JButton("Face Quantization");
 	private JButton apply = new JButton("Apply Change");
 
@@ -213,7 +220,24 @@ public class Viewer extends JFrame {
 				
 			}
 		});
-		
+		bw.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(blWh);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
 		
 		saturationMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
@@ -377,6 +401,26 @@ public class Viewer extends JFrame {
 				*/
 			}
 		});
+		blWh.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent c) {
+				southPanel.setVisible(true);
+				if(isBW){
+					isBW = false;
+				}else{
+					isBW = true;
+				}
+				
+				update();
+				
+				/*
+				image = bright.brighten( brightness.getValue()/100.f);
+				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+				*/
+			}
+		});
+		
 		satLevel.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
 				southPanel.setVisible(true);
@@ -576,15 +620,18 @@ public class Viewer extends JFrame {
 	}
 	*/
 	public void update(){
-		//currentImage = 
-		currentImage = bright.brighten( brightness.getValue()/100.f , image);
-		currentImage = sharp.sharpen(sharpness.getValue()/100.f, currentImage);
+
+		currentImage = sharp.sharpen(sharpness.getValue()/100.f, image);
+		currentImage = bright.brighten( brightness.getValue()/100.f , currentImage);
 		currentImage = con.contr(contrast.getValue()/100.f, currentImage);
 		currentImage = blurObj.blur(currentImage, blurLevel.getValue()/100.0f);
-		currentImage = saturation.saturate(currentImage, satLevel.getValue()/100.0f);
-
-		
-		
+		if(!isBW){
+			currentImage = saturation.saturate(currentImage, satLevel.getValue()/100.0f);
+		}
+		if(!isBW){
+			currentImage = blackAndWhite.blackWhite(currentImage);
+		}
+		System.out.println("DONE");
 		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));
 		centerPanel.repaint();

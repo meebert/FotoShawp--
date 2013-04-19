@@ -25,6 +25,7 @@ public class Viewer extends JFrame {
 	Saturation saturation = new Saturation();
 	BW blackAndWhite = new BW();
 	boolean isBW = false;
+	JavaCVFaceDetect haarFeatureDetector;
 	
 	//DISPLAY VARS
 	private JFrame frame = new JFrame("FotoShawp--");
@@ -52,7 +53,7 @@ public class Viewer extends JFrame {
 	private JSlider satLevel = new JSlider(0,200,100);
 	private JLabel satLabel = new JLabel("Saturation->");
 	
-<<<<<<< HEAD
+// HEAD
 	private JLabel xrayLabel = new JLabel("X-Ray->");
 	
 	private JLabel bwLabel = new JLabel("Black and White->");
@@ -66,11 +67,10 @@ public class Viewer extends JFrame {
 	private JLabel bulgeLabel = new JLabel("Bulge->");
 	
 	
-=======
+
 	private JButton blWh = new JButton("Black and White");
 	
 
->>>>>>> COMMIT
 	private JButton faceQ = new JButton("Face Quantization");
 	private JButton apply = new JButton("Apply Change");
 
@@ -485,7 +485,9 @@ public class Viewer extends JFrame {
 		faceQ.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				FaceDetect theFace = new FaceDetect();
-				currentImage = theFace.skinQuantize(currentImage);
+				haarFeatureDetector = new JavaCVFaceDetect(currentImage);
+				currentImage = haarFeatureDetector.haarDetect();
+				//currentImage = theFace.skinQuantize(currentImage);
 				apply();
 				
 			}	

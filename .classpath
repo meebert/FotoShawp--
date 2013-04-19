@@ -3,5 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/Mebert/Dropbox/FotoShawp--/Filters.jar"/>
+	<classpathentry kind="lib" path="/Users/Mebert/Dropbox/FotoShawp--/javacv-cppjars/ffmpeg-1.2-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="/Users/Mebert/Dropbox/FotoShawp--/javacv-cppjars/opencv-2.4.5-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="/Users/Mebert/Dropbox/FotoShawp--/javacv-bin/javacv.jar"/>
+	<classpathentry kind="lib" path="/Users/Mebert/Dropbox/FotoShawp--/javacv-bin/javacv-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="/Users/Mebert/Dropbox/FotoShawp--/javacv-bin/javacpp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

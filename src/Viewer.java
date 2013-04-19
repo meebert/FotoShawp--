@@ -65,20 +65,24 @@ public class Viewer extends JFrame {
 	private JLabel warpLabel = new JLabel("Warp->");
 	
 	private JLabel bulgeLabel = new JLabel("Bulge->");
-	
-	
 
 	private JButton blWh = new JButton("Black and White");
-	
 
 	private JButton faceQ = new JButton("Face Quantization");
+	
+	private JButton faceBoxes = new JButton("Face Detection Boxes");
+
 	private JButton apply = new JButton("Apply Change");
+	
+	private JButton reset = new JButton("Reset Image");
 
 	//FILE MENU
 	private JMenu file = new JMenu("File");
 	private JMenuItem quitMenu = new JMenuItem("Quit");
 	private JMenuItem loadMenu = new JMenuItem("Load");
 	private JMenuItem saveMenu = new JMenuItem("Save");
+	private JMenuItem resetMenu = new JMenuItem("Reset Image");
+
 
 
 	//DITHER MENU
@@ -110,6 +114,8 @@ public class Viewer extends JFrame {
 	//FACE MENU
 	private JMenu face = new JMenu("Face Detection");
 	private JMenuItem faceQuan = new JMenuItem("Quantization");
+	private JMenuItem faceBoxMenu = new JMenuItem("Face Detection Boxes");
+	
 
 	
 	
@@ -134,6 +140,7 @@ public class Viewer extends JFrame {
 		//FILE MENU
 		file.add(loadMenu);
 		file.add(saveMenu);
+		file.add(resetMenu);
 		file.add(quitMenu);
 		menuBar.add(file);
 	
@@ -163,6 +170,7 @@ public class Viewer extends JFrame {
 		
 		//FACE MENU
 		face.add(faceQuan);
+		face.add(faceBoxMenu);
 		menuBar.add(face);
 		
 		//CENTER PANEL (IMAGE)
@@ -201,6 +209,31 @@ public class Viewer extends JFrame {
 				
 			}
 		});
+		resetMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(true);
+				Image sImage = image.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				currentImage = image;
+				sharpness = new JSlider(0,200,0);
+				contrast = new JSlider(0,200);
+				brightness = new JSlider(0,200);
+				blurLevel = new JSlider(100,200,100);
+				satLevel = new JSlider(0,200,100);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
 		
 		faceQuan.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
@@ -220,6 +253,25 @@ public class Viewer extends JFrame {
 				
 			}
 		});
+		faceBoxMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(faceBoxes);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
 		bw.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
@@ -401,8 +453,25 @@ public class Viewer extends JFrame {
 				*/
 			}
 		});
-		blWh.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent c) {
+		faceBoxes.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				southPanel.setVisible(true);
+				haarFeatureDetector = new JavaCVFaceDetect(image);
+				BufferedImage temp = haarFeatureDetector.haarDetect();
+				Image sImage = temp.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				repaint();
+				
+			}	
+		});
+		
+		
+		
+		blWh.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
 				southPanel.setVisible(true);
 				if(isBW){
 					isBW = false;
@@ -485,9 +554,7 @@ public class Viewer extends JFrame {
 		faceQ.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				FaceDetect theFace = new FaceDetect();
-				haarFeatureDetector = new JavaCVFaceDetect(currentImage);
-				currentImage = haarFeatureDetector.haarDetect();
-				//currentImage = theFace.skinQuantize(currentImage);
+				currentImage = theFace.skinQuantize(currentImage);
 				apply();
 				
 			}	
@@ -630,7 +697,7 @@ public class Viewer extends JFrame {
 		if(!isBW){
 			currentImage = saturation.saturate(currentImage, satLevel.getValue()/100.0f);
 		}
-		if(!isBW){
+		if(isBW){
 			currentImage = blackAndWhite.blackWhite(currentImage);
 		}
 		System.out.println("DONE");

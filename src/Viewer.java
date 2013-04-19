@@ -220,11 +220,12 @@ public class Viewer extends JFrame {
 				repaint();
 				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
 				currentImage = image;
-				sharpness = new JSlider(0,200,0);
-				contrast = new JSlider(0,200);
-				brightness = new JSlider(0,200);
-				blurLevel = new JSlider(100,200,100);
-				satLevel = new JSlider(0,200,100);
+		
+				sharpness.setValue(0);
+				contrast.setValue(100);
+				brightness.setValue(100);
+				blurLevel.setValue(100);
+				satLevel.setValue(100);
 				
 				EventQueue.invokeLater(new Runnable(){
 					public void run(){

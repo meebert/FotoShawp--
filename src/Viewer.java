@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.LinkedList;
 
 public class Viewer extends JFrame {
 	private BufferedImage image;
@@ -14,6 +15,7 @@ public class Viewer extends JFrame {
 	private JFileChooser imageChooser = new JFileChooser();
 	private static Viewer view = new Viewer();
 	private final int SCALE = 900;
+	private LinkedList<int[]> bounds = new LinkedList<int[]>();
 
 	//TRANSFORMATION OBJECTS
 	Brightness bright;
@@ -115,6 +117,7 @@ public class Viewer extends JFrame {
 	private JMenu face = new JMenu("Face Detection");
 	private JMenuItem faceQuan = new JMenuItem("Quantization");
 	private JMenuItem faceBoxMenu = new JMenuItem("Face Detection Boxes");
+	private JMenuItem setBoundsMenu = new JMenuItem("Set Face Bounds");
 	
 
 	
@@ -158,6 +161,7 @@ public class Viewer extends JFrame {
 		filters.add(warp);
 		menuBar.add(filters);
 		
+		
 		//DITHER MENU
 		dither.add(oDither);
 		dither.add(rDither);
@@ -171,7 +175,13 @@ public class Viewer extends JFrame {
 		//FACE MENU
 		face.add(faceQuan);
 		face.add(faceBoxMenu);
+		face.add(setBoundsMenu);
 		menuBar.add(face);
+		
+		filters.enable(false);
+		dither.enable(false);
+		mosaic.enable(false);
+		face.enable(false);
 		
 		//CENTER PANEL (IMAGE)
 		centerPanel.add(imageLabel);
@@ -189,6 +199,23 @@ public class Viewer extends JFrame {
 		saveMenu.addActionListener(new Save());
 		
 		//MENU LISTENERS
+		setBoundsMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+				BufferedImage temp = image;
+				haarFeatureDetector = new JavaCVFaceDetect(temp);
+				bounds = haarFeatureDetector.setFaceBounds();
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
 		sharpenMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
@@ -457,8 +484,9 @@ public class Viewer extends JFrame {
 		faceBoxes.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				southPanel.setVisible(true);
-				haarFeatureDetector = new JavaCVFaceDetect(image);
-				BufferedImage temp = haarFeatureDetector.haarDetect();
+				BufferedImage temp = image;
+				haarFeatureDetector = new JavaCVFaceDetect(temp);
+				temp = haarFeatureDetector.detectWBoxes(true);
 				Image sImage = temp.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(sImage));
 				centerPanel.repaint();
@@ -692,7 +720,7 @@ public class Viewer extends JFrame {
 	public void update(){
 
 		currentImage = sharp.sharpen(sharpness.getValue()/100.f, image);
-		currentImage = bright.brighten( brightness.getValue()/100.f , currentImage);
+		currentImage = bright.brighten( brightness.getValue()/100.f , currentImage ,bounds);
 		currentImage = con.contr(contrast.getValue()/100.f, currentImage);
 		currentImage = blurObj.blur(currentImage, blurLevel.getValue()/100.0f);
 		if(!isBW){
@@ -701,7 +729,6 @@ public class Viewer extends JFrame {
 		if(isBW){
 			currentImage = blackAndWhite.blackWhite(currentImage);
 		}
-		System.out.println("DONE");
 		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));
 		centerPanel.repaint();
@@ -729,6 +756,11 @@ public class Viewer extends JFrame {
 				bright = new Brightness(image);
 				con = new Contrast(image);
 
+				filters.enable(true);
+				dither.enable(true);
+				mosaic.enable(true);
+				face.enable(true);
+				reset.enable(true);
 				
 			} catch (IOException e) {
 				System.out.println(e);

@@ -11,6 +11,8 @@ import com.googlecode.javacpp.Loader;
 import  com.googlecode.javacv.cpp.opencv_imgproc.*;
 import java.io.File;
 import java.net.URL;
+import java.util.LinkedList;
+
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 import static com.googlecode.javacv.cpp.opencv_calib3d.*;
@@ -27,6 +29,7 @@ import static com.googlecode.javacv.cpp.opencv_objdetect.*;
 
 public class JavaCVFaceDetect {
 	IplImage image;
+	CvSeq faces;
 	BufferedImage returnImage;
 	public static final String HAAR_FILE = "haarcascade_frontalface_default.xml";
 	
@@ -34,7 +37,7 @@ public class JavaCVFaceDetect {
 		image = IplImage.createFrom(i);
 	}
 	
-	public BufferedImage haarDetect(){
+	public BufferedImage detectWBoxes(boolean drawbox){
 		
 	    IplImage gray = IplImage.create(image.width(),image.height(), IPL_DEPTH_8U, 1);
         cvCvtColor(image, gray, CV_BGR2GRAY);
@@ -48,19 +51,20 @@ public class JavaCVFaceDetect {
 
         // instantiate a classifier cascade for face detection
         CvHaarClassifierCascade cascade =new CvHaarClassifierCascade(cvLoad(HAAR_FILE));
-        CvSeq faces = cvHaarDetectObjects(equImg, cascade, storage,1.1, 3, CV_HAAR_DO_CANNY_PRUNING);
+        faces = cvHaarDetectObjects(equImg, cascade, storage,1.1, 3, CV_HAAR_DO_CANNY_PRUNING);
         cvClearMemStorage(storage);
 
         // draw thick yellow rectangles around all the faces
         int total = faces.total();
 
-        for (int i = 0; i < total; i++) {
+        if(drawbox){
+        	for (int i = 0; i < total; i++) {
 
                 CvRect r = new CvRect(cvGetSeqElem(faces, i));
                 cvRectangle(image, cvPoint( r.x(), r.y() ),cvPoint( (r.x() + r.width()),(r.y() + r.height()) ),CvScalar.RED, 6, CV_AA, 0);
 
+        	}
         }
-        
         if (total > 0) {
         	returnImage = image.getBufferedImage();
 
@@ -68,5 +72,24 @@ public class JavaCVFaceDetect {
         
 		return returnImage;
 	}
+	
+	public LinkedList<int[]> setFaceBounds(){
+		LinkedList<int[]> bounds = new LinkedList<int[]>();
+		BufferedImage test = this.detectWBoxes(false);
+	
+        int total = faces.total();
+
+	    for (int i = 0; i < total; i++) {
+
+	        CvRect r = new CvRect(cvGetSeqElem(faces, i));
+	        int[] temp = {r.x() , r.y(), r.x() + r.width() , r.y() + r.height()};
+	        bounds.add(temp);
+
+	     }
+	        
+		return bounds;
+	}
+	
+	
 	
 }

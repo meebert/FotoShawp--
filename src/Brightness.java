@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.image.*;
+import java.util.LinkedList;
 
 import com.jhlabs.image.*;
 
@@ -11,7 +12,7 @@ public class Brightness {
 		image = i;
 	}
 	
-	public BufferedImage brighten(float bright , BufferedImage i){
+	public BufferedImage brighten(float bright , BufferedImage i , LinkedList<int[]> bounds){
 		brightness = bright;
 
 		
@@ -33,15 +34,37 @@ public class Brightness {
 			// each of the alpha, red, green, blue channels is stored in one byte in order;
 			// you can use the Color class to extract the value of each individual channel
 			// or composite a new integer color from the separated components
+			int tempX = k % width;
+			int tempY = (int) Math.ceil((double)(k/width));
+			boolean inBound = false;
+			if(bounds.size()!=0){
+				for(int[] currentBound: bounds){
+				
+					if(tempX > currentBound[0] && tempX < currentBound[2] && tempY > currentBound[1] && tempY < currentBound[3] ){
+						inBound = true;
+					}
+				
+				
+				
+				}
+			}else{
+				inBound = true;
+			}
+			
 			a = rgb.getAlpha();
 			r = rgb.getRed();
 			g = rgb.getGreen();
 			b = rgb.getBlue();
-			r = PixelUtils.clamp((int)((float)r * brightness));
-			g = PixelUtils.clamp((int)((float)g * brightness));
-			b = PixelUtils.clamp((int)((float)b * brightness));
+		
+			if(inBound == true){
 
+				r = PixelUtils.clamp((int)((float)r * brightness));
+				g = PixelUtils.clamp((int)((float)g * brightness));
+				b = PixelUtils.clamp((int)((float)b * brightness));
+
+			}
 			pixels[k] = new Color(r, g, b, a).getRGB();
+
 		}
 
 		// write pixel values to the destination image

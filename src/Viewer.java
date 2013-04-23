@@ -728,7 +728,7 @@ public class Viewer extends JFrame {
 			currentImage = saturation.saturate(currentImage, satLevel.getValue()/100.0f);
 		}
 		if(isBW){
-			currentImage = blackAndWhite.blackWhite(currentImage);
+			currentImage = blackAndWhite.blackWhite(currentImage , bounds);
 		}
 		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));

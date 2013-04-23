@@ -82,7 +82,7 @@ public class JavaCVFaceDetect {
 	    for (int i = 0; i < total; i++) {
 
 	        CvRect r = new CvRect(cvGetSeqElem(faces, i));
-	        int[] temp = {r.x() , r.y(), r.x() + r.width() , r.y() + r.height()};
+	        int[] temp = {r.x() , r.y(), (r.x() + r.width()) , (r.y() + r.height()) };
 	        bounds.add(temp);
 
 	     }

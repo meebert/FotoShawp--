@@ -49,7 +49,7 @@ public class Viewer extends JFrame {
 	private JSlider brightness = new JSlider(0,200);
 	private JLabel brightLabel = new JLabel("Brightness->");
 
-	private JSlider blurLevel = new JSlider(100,200,100);
+	private JSlider blurLevel = new JSlider(0,1000,0);
 	private JLabel blurLabel = new JLabel("Blur->");
 
 	private JSlider satLevel = new JSlider(0,200,100);
@@ -253,6 +253,7 @@ public class Viewer extends JFrame {
 				brightness.setValue(100);
 				blurLevel.setValue(100);
 				satLevel.setValue(100);
+				bounds = new LinkedList<int[]>();
 				
 				EventQueue.invokeLater(new Runnable(){
 					public void run(){
@@ -721,7 +722,7 @@ public class Viewer extends JFrame {
 
 		currentImage = sharp.sharpen(sharpness.getValue()/100.f, image);
 		currentImage = bright.brighten( brightness.getValue()/100.f , currentImage ,bounds);
-		currentImage = con.contr(contrast.getValue()/100.f, currentImage);
+		currentImage = con.contr(contrast.getValue()/100.f, currentImage ,bounds);
 		currentImage = blurObj.blur(currentImage, blurLevel.getValue()/100.0f);
 		if(!isBW){
 			currentImage = saturation.saturate(currentImage, satLevel.getValue()/100.0f);
@@ -761,6 +762,8 @@ public class Viewer extends JFrame {
 				mosaic.enable(true);
 				face.enable(true);
 				reset.enable(true);
+				bounds = new LinkedList<int[]>();
+
 				
 			} catch (IOException e) {
 				System.out.println(e);

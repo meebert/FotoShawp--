@@ -21,13 +21,19 @@ public class Viewer extends JFrame {
 	Brightness bright;
 	Sharpen sharp;
 	Contrast con;
+	Invert inv;
+	Sepia sep;
 	Dither dit = new Dither();
 	Mosaic mos = new Mosaic();
 	Blur blurObj = new Blur();
 	Saturation saturation = new Saturation();
+<<<<<<< HEAD
 	BW blackAndWhite = new BW();
 	boolean isBW = false;
 	JavaCVFaceDetect haarFeatureDetector;
+=======
+	
+>>>>>>> Sepia and Invert
 	
 	//DISPLAY VARS
 	private JFrame frame = new JFrame("FotoShawp--");
@@ -40,7 +46,7 @@ public class Viewer extends JFrame {
 	//SOUTH PANEL
 	private JPanel southPanel = new JPanel();
 	
-	private JSlider sharpness = new JSlider(0,200,0);
+	private JSlider sharpness = new JSlider(100,200,100);
 	private JLabel sharpLabel = new JLabel("Sharpness->");
 	
 	private JSlider contrast = new JSlider(0,200);
@@ -55,7 +61,10 @@ public class Viewer extends JFrame {
 	private JSlider satLevel = new JSlider(0,200,100);
 	private JLabel satLabel = new JLabel("Saturation->");
 	
+<<<<<<< HEAD
 // HEAD
+=======
+>>>>>>> Sepia and Invert
 	private JLabel xrayLabel = new JLabel("X-Ray->");
 	
 	private JLabel bwLabel = new JLabel("Black and White->");
@@ -67,16 +76,28 @@ public class Viewer extends JFrame {
 	private JLabel warpLabel = new JLabel("Warp->");
 	
 	private JLabel bulgeLabel = new JLabel("Bulge->");
+<<<<<<< HEAD
 
 	private JButton blWh = new JButton("Black and White");
 
+=======
+	
+	private JLabel invertLabel = new JLabel("Invert Colors->");
+	
+	
+>>>>>>> Sepia and Invert
 	private JButton faceQ = new JButton("Face Quantization");
 	
 	private JButton faceBoxes = new JButton("Face Detection Boxes");
 
 	private JButton apply = new JButton("Apply Change");
+<<<<<<< HEAD
 	
 	private JButton reset = new JButton("Reset Image");
+=======
+	private JButton invert = new JButton("Invert Colors");
+	private JButton sepia = new JButton("Sepia");
+>>>>>>> Sepia and Invert
 
 	//FILE MENU
 	private JMenu file = new JMenu("File");
@@ -100,17 +121,19 @@ public class Viewer extends JFrame {
 	private JMenuItem saturationMenu = new JMenuItem("Saturation");
 	private JMenuItem brightMenu = new JMenuItem("Brightness");
 	private JMenuItem conMenu = new JMenuItem("Contrast");
-	private JMenuItem bw = new JMenuItem("Black and White");
-	private JMenuItem sepia = new JMenuItem("Sepia");
-	private JMenuItem xray = new JMenuItem("X-Ray");
-	private JMenuItem popart = new JMenuItem("Pop-Art");
-	private JMenuItem bulge = new JMenuItem("Bulge");
-	private JMenuItem warp = new JMenuItem("Warp");
+	private JMenuItem bwMenu = new JMenuItem("Black and White");
+	private JMenuItem sepiaMenu = new JMenuItem("Sepia");
+	private JMenuItem xrayMenu = new JMenuItem("X-Ray");
+	private JMenuItem popartMenu = new JMenuItem("Pop-Art");
+	private JMenuItem bulgeMenu = new JMenuItem("Bulge");
+	private JMenuItem warpMenu = new JMenuItem("Warp");
+	private JMenuItem invertMenu = new JMenuItem("Invert Color");
 	
 	//MOSAIC MENU
 	private JMenu mosaic = new JMenu("Photo Mosaic");
 	private JMenuItem music = new JMenuItem("Music");
 	private JMenuItem paints = new JMenuItem("Paintings");
+	private JMenuItem movies = new JMenuItem("Movies");
 	
 	
 	//FACE MENU
@@ -153,12 +176,13 @@ public class Viewer extends JFrame {
 		filters.add(brightMenu);
 		filters.add(saturationMenu);
 		filters.add(conMenu);
-		filters.add(bw);
-		filters.add(sepia);
-		filters.add(xray);
-		filters.add(popart);
-		filters.add(bulge);
-		filters.add(warp);
+		filters.add(bwMenu);
+		filters.add(sepiaMenu);
+		filters.add(xrayMenu);
+		filters.add(invertMenu);
+		filters.add(popartMenu);
+		filters.add(bulgeMenu);
+		filters.add(warpMenu);
 		menuBar.add(filters);
 		
 		
@@ -282,6 +306,7 @@ public class Viewer extends JFrame {
 				
 			}
 		});
+<<<<<<< HEAD
 		faceBoxMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
@@ -319,6 +344,9 @@ public class Viewer extends JFrame {
 				
 			}
 		});
+=======
+		
+>>>>>>> Sepia and Invert
 		
 		saturationMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
@@ -482,6 +510,7 @@ public class Viewer extends JFrame {
 				*/
 			}
 		});
+<<<<<<< HEAD
 		faceBoxes.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				southPanel.setVisible(true);
@@ -520,6 +549,8 @@ public class Viewer extends JFrame {
 			}
 		});
 		
+=======
+>>>>>>> Sepia and Invert
 		satLevel.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
 				southPanel.setVisible(true);
@@ -575,6 +606,32 @@ public class Viewer extends JFrame {
 			}
 		});
 		
+		invert.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent c) {
+				southPanel.setVisible(true);
+				//update();
+
+				currentImage = inv.invert(currentImage);
+				
+				Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+			}
+		});
+		
+		sepia.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent c) {
+				southPanel.setVisible(true);
+				//update();
+				
+				currentImage = sep.brownIt(currentImage);
+				
+				Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
+				imageLabel.setIcon(new ImageIcon(sImage));
+				centerPanel.repaint();
+			}
+		});
+		
 		apply.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				apply();
@@ -590,7 +647,7 @@ public class Viewer extends JFrame {
 			}	
 		});
 		
-		bw.addActionListener(new ActionListener(){
+		bwMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
 				southPanel.removeAll();
@@ -610,14 +667,14 @@ public class Viewer extends JFrame {
 			}
 		});
 		
-		sepia.addActionListener(new ActionListener(){
+		invertMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
 				southPanel.removeAll();
 				southPanel.setVisible(true);
 
-				southPanel.add(sepiaLabel);
-				southPanel.add(apply);
+				southPanel.add(invertLabel);
+				southPanel.add(invert);
 				//southPanel.repaint();
 				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
 				
@@ -630,7 +687,27 @@ public class Viewer extends JFrame {
 			}
 		});
 		
-		xray.addActionListener(new ActionListener(){
+		sepiaMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				southPanel.setVisible(false);
+				southPanel.removeAll();
+				southPanel.setVisible(true);
+
+				southPanel.add(sepiaLabel);
+				southPanel.add(sepia);
+				//southPanel.repaint();
+				frame.getContentPane().add(southPanel , BorderLayout.SOUTH);
+				
+				EventQueue.invokeLater(new Runnable(){
+					public void run(){
+						repaint();
+					}
+				});
+				
+			}
+		});
+		
+		xrayMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
 				southPanel.removeAll();
@@ -650,7 +727,7 @@ public class Viewer extends JFrame {
 			}
 		});
 		
-		popart.addActionListener(new ActionListener(){
+		popartMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
 				southPanel.removeAll();
@@ -670,7 +747,7 @@ public class Viewer extends JFrame {
 			}
 		});
 		
-		warp.addActionListener(new ActionListener(){
+		warpMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
 				southPanel.removeAll();
@@ -690,7 +767,7 @@ public class Viewer extends JFrame {
 			}
 		});
 		
-		bulge.addActionListener(new ActionListener(){
+		bulgeMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				southPanel.setVisible(false);
 				southPanel.removeAll();
@@ -719,6 +796,7 @@ public class Viewer extends JFrame {
 	}
 	*/
 	public void update(){
+<<<<<<< HEAD
 
 		currentImage = sharp.sharpen(sharpness.getValue()/100.f, image);
 		currentImage = bright.brighten( brightness.getValue()/100.f , currentImage ,bounds);
@@ -730,6 +808,19 @@ public class Viewer extends JFrame {
 		if(isBW){
 			currentImage = blackAndWhite.blackWhite(currentImage , bounds);
 		}
+=======
+		//currentImage = 
+		currentImage = bright.brighten( brightness.getValue()/100.f , image);
+		currentImage = sharp.sharpen(sharpness.getValue()/100.f, currentImage);
+		currentImage = con.contr(contrast.getValue()/100.f, currentImage);
+		currentImage = blurObj.blur(currentImage, blurLevel.getValue()/100.0f);
+		currentImage = saturation.saturate(currentImage, satLevel.getValue()/100.0f);
+		//currentImage = inv.invert(currentImage);
+//		currentImage = sep.brownIt(currentImage);
+
+		
+		
+>>>>>>> Sepia and Invert
 		Image sImage = currentImage.getScaledInstance(SCALE, -1, image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(sImage));
 		centerPanel.repaint();
@@ -756,6 +847,7 @@ public class Viewer extends JFrame {
 				sharp = new Sharpen(image);
 				bright = new Brightness(image);
 				con = new Contrast(image);
+<<<<<<< HEAD
 
 				filters.enable(true);
 				dither.enable(true);
@@ -764,6 +856,11 @@ public class Viewer extends JFrame {
 				reset.enable(true);
 				bounds = new LinkedList<int[]>();
 
+=======
+				inv = new Invert(image);
+				sep = new Sepia(image);
+				
+>>>>>>> Sepia and Invert
 				
 			} catch (IOException e) {
 				System.out.println(e);

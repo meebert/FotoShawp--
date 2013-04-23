@@ -1,26 +1,36 @@
 import java.awt.Color;
 import java.awt.image.*;
+<<<<<<< HEAD:src/BW.java
 import java.util.LinkedList;
 
+=======
+>>>>>>> Sepia and Invert:src/Invert.java
 import com.jhlabs.image.*;
 
-public class BW {
-
+public class Invert {
+	private BufferedImage image;
 	
-	public BW(){
-	
+	public Invert(BufferedImage i){	
+		image = i; 
 	}
+<<<<<<< HEAD:src/BW.java
 	public BufferedImage blackWhite(BufferedImage i, LinkedList<int[]> bounds){
+=======
+	public BufferedImage invert(BufferedImage i){
+
+		BufferedImage dst = new BufferedImage(i.getWidth() , i.getHeight(), i.getType());
+
+>>>>>>> Sepia and Invert:src/Invert.java
 		int width = i.getWidth();
 		int height = i.getHeight();
+
 		int[] pixels = new int[width * height];
-		BufferedImage dst = new BufferedImage(i.getWidth() , i.getHeight(), i.getType());
 		i.getRGB(0, 0, width, height, pixels, 0, width);
 		
 		
-		double l = 0;
-		float sat = 0.0f;
+		int a, r, g, b;
 		
+<<<<<<< HEAD:src/BW.java
 		int r , b , g, a;
 		float mult = 1.0f;
 		for(int k = 0; k < width * height; k ++) {
@@ -82,13 +92,30 @@ public class BW {
 				b =PixelUtils.clamp( (int) ((b*sat)+(l*(1-sat))));
 			}
 			pixels[k] = new Color(r, g, b, a).getRGB();
-
+=======
+		for(int x = 0; x <height*width; x++){
 			
+			Color rgb = new Color(pixels[x]);
+			
+			a = rgb.getAlpha();
+			r = rgb.getRed();
+			g = rgb.getGreen();
+			b = rgb.getBlue();
+			
+			r = PixelUtils.clamp(255 - r);
+			g = PixelUtils.clamp(255 - g);
+			b = PixelUtils.clamp(255 - b);
+>>>>>>> Sepia and Invert:src/Invert.java
+
+			pixels[x] = new Color(r, g, b, a).getRGB();
+		
 		}
 		dst.setRGB(0, 0, width, height, pixels, 0, width);
-	return dst;	
 		
-		
+		return dst;
+	}
+	public void setImage(BufferedImage i){
+		image = i;
 	}
 	
 }

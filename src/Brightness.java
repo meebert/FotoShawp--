@@ -74,7 +74,7 @@ public class Brightness {
 			if(inBound == true){
 				if(centerX != 0 || centerY !=0){
 					 mult = 1.0f - ( (currentD/largestD) );
-					 mult = mult * mult * mult;
+					 mult = (float) Math.pow(mult, 2.75f);
 				}
 				if(brightness >= 1.0f){
 					r = PixelUtils.clamp((int)((float)r * (1.0f + ((brightness)-1.0f)*mult)) );

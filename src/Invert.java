@@ -78,7 +78,7 @@ public class Invert {
 			if(inBound == true){
 				if(centerX != 0 || centerY !=0){
 					 mult = 1.0f - ( (currentD/largestD) );
-					 mult =   mult;
+					 mult = (float) Math.pow(mult, 0.75f);
 				}
 				sat = 1- mult;
 				
